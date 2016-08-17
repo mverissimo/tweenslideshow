@@ -1,0 +1,39 @@
+*,
+*:after,
+*:before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+
+}
+
+body,
+html { height: 100%; }
+html { font-size: 16px; }
+
+body {
+
+  line-height: 1;
+
+  font-size:      $font-size-base;
+  font-family:    $font-family-base;
+  font-smoothing: antialiased;
+
+  text-rendering: optimizeLegibility;
+  text-size-adjust: none;
+
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 { margin: 0 }
+
+ol li,
+ul li { list-style: none; }
+
+a { text-decoration: none; }
+
+img { max-width: 100%; }

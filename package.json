@@ -1,0 +1,47 @@
+{
+  "name": "simple",
+  "version": "1.0.0",
+  "description": "A simple boilerplate to create projects using jade and sass",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mverissimo/Simple.git"
+  },
+  "keywords": [
+    "Jade",
+    "SASS",
+    "Gulp",
+    "Susy"
+  ],
+  "author": "Matheus Verissimo <ma.theus_verissimo@hotmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mverissimo/Simple/issues"
+  },
+  "homepage": "https://github.com/mverissimo/Simple#readme",
+  "devDependencies": {
+    "browser-sync": "^2.12.3",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-cache": "^0.4.5",
+    "gulp-cache-bust": "^1.0.2",
+    "gulp-if": "^2.0.0",
+    "gulp-imagemin": "^2.4.0",
+    "gulp-jade": "^1.1.0",
+    "gulp-jshint": "^2.0.0",
+    "gulp-load-plugins": "^1.2.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.2.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-svg-sprite": "^1.2.19",
+    "gulp-uglify": "^1.5.3",
+    "jshint": "^2.9.2",
+    "minimist": "^1.2.0"
+  },
+  "dependencies": {
+    "critical": "^0.7.2"
+  }
+}
