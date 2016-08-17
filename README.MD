@@ -1,4 +1,4 @@
-# Simple Full Page Scroll
+# A basic Tween slideshow
 Create amazing fullpage:
 * **[See live example.](https://mverissimo.github.io/tweenslider/)**
 
