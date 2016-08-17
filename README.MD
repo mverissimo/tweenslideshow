@@ -1,6 +1,6 @@
 # A basic Tween slideshow
 Create amazing fullpage:
-* **[See live example.](https://mverissimo.github.io/tweenslider/)**
+* **[See live example.](https://mverissimo.github.io/tweenslideshow/)**
 
 ## Installation
 ###Step 1: Link required files
