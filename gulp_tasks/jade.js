@@ -12,7 +12,7 @@ module.exports = function(args) {
 
     return gulp.src('app/templates/index.jade')
       .pipe(jade({
-        pretty: !isProduction
+        pretty: isProduction
       }))
       .on('error', function(error) {
         console.error('' + error);
