@@ -88,7 +88,7 @@
     this.bindEvents();
     this.makeActive(this.index);
 
-    if (typeof this.settings.onLeave === 'function') {
+    if (typeof this.settings.afterLoad === 'function') {
       this.settings.afterLoad(this.index, this.items);
     }
 
