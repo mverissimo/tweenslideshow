@@ -162,10 +162,13 @@
     var tl = new TimelineLite();
     var self = this;
 
+    var paginationLinks = document.querySelector('.slider-navigation');
+
     if (!this.items[index].classList.contains('is-active')) {
       tl.eventCallback('onStart', function() {
         utils.setStyle(self.settings.prevHtml, 'pointerEvents', 'none');
         utils.setStyle(self.settings.nextHtml, 'pointerEvents', 'none');
+        utils.setStyle(paginationLinks, 'pointerEvents', 'none');
 
       });
 
@@ -186,6 +189,7 @@
       tl.eventCallback('onComplete', function() {
         utils.setStyle(self.settings.prevHtml, 'pointerEvents', 'initial');
         utils.setStyle(self.settings.nextHtml, 'pointerEvents', 'initial');
+        utils.setStyle(paginationLinks, 'pointerEvents', 'initial');
 
       });
 
