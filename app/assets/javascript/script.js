@@ -1,26 +1,28 @@
-var slider = new TuinSlide('#slider', {
-  onLeave: function(index, items) {
+var slider = new TuinSlider('#slider', {
+  onLeave: function(index) {
+    // Tween timeline object
     var tl = new TimelineLite();
-    var current = items[index];
 
-    // Animate title every slide current
-    var title = current.querySelectorAll('.slider__item__title');
-    var content = current.querySelector('.slider__content');
+    // Select elements in current slide, 
+    // if not the animation triggers for all elements
+    var items = document.querySelectorAll('.slider__item')
+    var item = items[index];
+
+    // Animate title
+    var title = item.querySelectorAll('.title');
 
     // First slide = 0
-    var burger = current.querySelector('.burger');
+    var burger = item.querySelector('.burger');
 
     // Second slide = 1
-    var astronaut = current.querySelector('.astronaut');
+    var astronaut = item.querySelector('.astronaut');
 
     // Third slide = 2
-    var cup = current.querySelectorAll('.cup');
+    var cup = item.querySelectorAll('.cup');
 
+    // Exit animations
     if (index === 0) {
-      tl.staggerFromTo(title, 0.8, {
-          y: 0,
-          opacity: 1,
-        }, {
+      tl.staggerTo(title, 0.8, {
           y: -100,
           opacity: 0,
           ease: Power3.easeOut
@@ -36,10 +38,7 @@ var slider = new TuinSlide('#slider', {
     }
 
     if (index === 1) {
-      tl.staggerFromTo(title, 0.8, {
-          y: 0,
-          opacity: 1,
-        }, {
+      tl.staggerTo(title, 0.8, {
           y: 100,
           opacity: 0,
           ease: Power3.easeOut
@@ -51,36 +50,55 @@ var slider = new TuinSlide('#slider', {
 
     }
 
+    if (index === 2) {
+      tl.staggerTo(title, 0.8, {
+          y: -100,
+          opacity: 0,
+          ease: Power3.easeOut
+        }, 0.5)
+        .to(cup, 0.5, {
+          x: 100,
+          opacity: 0
+        });
+
+    }
 
     return tl;
 
   },
 
-  afterLoad: function(index, items) {
+  afterLoad: function(index) {
+    // Tween timeline object
     var tl = new TimelineLite();
-    var current = items[index];
 
-    // Animate title every slide current
-    var title = current.querySelectorAll('.slider__item__title');
-    var content = current.querySelector('.slider__content');
+    // Select elements in current slide, 
+    // if not the animation triggers for all elements
+    var items = document.querySelectorAll('.slider__item')
+    var item = items[index];
 
-    // First slide = 0
-    var burger = current.querySelector('.burger');
+    // Animate title every slide item
+    var title = item.querySelectorAll('.title');
 
-    // Second slide = 1
-    var astronaut = current.querySelector('.astronaut');
-
-    // Third slide = 2
-    var cup = current.querySelectorAll('.cup');
-
-
+    // Hide the content case click in between values dots
+    // By example you are slide one and click slide third
+    // this make hide the content in slide two
+    var content = item.querySelector('.slider__content');
     TweenLite.set(content, {
       visibility: 'visible'
     });
 
+    // First slide = 0
+    var burger = item.querySelector('.burger');
 
+    // Second slide = 1
+    var astronaut = item.querySelector('.astronaut');
+
+    // Third slide = 2
+    var cup = item.querySelectorAll('.cup');
+
+    // Enter animations
     if (index === 0) {
-      tl.staggerFromTo(title, 0.8, {
+      tl.staggerFromTo(title, 1, {
           y: 100,
           opacity: 0,
         }, {
