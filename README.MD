@@ -110,7 +110,7 @@ option: afterLoad: function(index, items) {},
 
 **Version 1.0.0**
 
-* Support for internet explorer 9
+* Support for internet explorer 9.
 
 ##Image license
 [Pixel Squid](https://www.pixelsquid.com/)
