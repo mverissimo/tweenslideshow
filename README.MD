@@ -100,18 +100,19 @@ default: null,
 option: afterLoad: function(index, items) {},
 ```
 
-### Gulp commands
+## Gulp commands
 
 * `gulp` —— Default for task development
 * `gulp --prod` —— Task production
 * Access http://localhost:3000
 
-## Future features
-* Touch events
-* Horizontal option
+## Change log
 
-#Image license
-Thanks!
+**Version 1.0.0**
+
+* Support for internet explorer 9
+
+##Image license
 [Pixel Squid](https://www.pixelsquid.com/)
 
 ## Contributing
