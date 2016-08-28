@@ -31,6 +31,7 @@
         if (defaults.hasOwnProperty(key)) {
           defaults[key] = options[key];
         }
+     
       }
 
       return defaults;
