@@ -91,13 +91,13 @@ page.move(index);
 **onLeave**
 ```
 default: null,
-option: onLeave: function(index, items) {},
+option: onLeave: function(index) {},
 ```
 
 **afterLoad**
 ```
 default: null,
-option: afterLoad: function(index, items) {},
+option: afterLoad: function(index) {},
 ```
 
 ## Gulp commands
