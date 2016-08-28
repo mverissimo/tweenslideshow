@@ -19,29 +19,27 @@
 
   }
 
-  var defaults = {
-    selector: '.slider',
-
-    // Greensock options
-    ease: 'SlowMo',
-    easeType: 'easeOut',
-    duration: 1,
-
-    nextHtml: '',
-    prevHtml: '',
-
-    arrows: true,
-    keyboard: true,
-    pagination: true,
-
-    onLeave: null,
-    afterLoad: null,
-
-  };
-
+  // Utilities helpers
   var utils = {
+    // From http://stackoverflow.com/questions/11197247/javascript-equivalent-of-jquerys-extend-method
+    extend: function(defaults, options) {
+      if (typeof(options) !== 'object') {
+        options = {};
+      }
+
+      for (var key in options) {
+        if (defaults.hasOwnProperty(key)) {
+          defaults[key] = options[key];
+        }
+      }
+
+      return defaults;
+
+    },
+
     setStyle: function(el, property, value) {
       el.style[property.charAt(0).toLowerCase() + property.slice(1)] = value;
+
     },
 
     setVendor: function(el, property, value) {
@@ -53,15 +51,63 @@
 
     },
 
+    // From http://jaketrent.com/post/addremove-classes-raw-javascript/
+    hasClass: function(el, className) {
+      if (el.classList) {
+        return el.classList.contains(className);
+      } else {
+        return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
+      }
+
+    },
+
+    addClass: function(el, className) {
+      if (el.classList) {
+        el.classList.add(className);
+      } else if (!utils.hasClass(el, className)) {
+        el.className += " " + className;
+      }
+    },
+
+    removeClass: function(el, className) {
+      if (el.classList)
+        el.classList.remove(className)
+      else if (utils.hasClass(el, className)) {
+        var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
+        el.className = el.className.replace(reg, ' ');
+      }
+
+    },
+
   };
 
-  var TuinSlide = function(element, options) {
+  function TuinSlider(element, options) {
+
+    var defaults = {
+      selector: '.slider',
+
+      // Greensock options
+      ease: 'SlowMo',
+      easeType: 'easeOut',
+      duration: 1,
+
+      nextHtml: '',
+      prevHtml: '',
+
+      arrows: true,
+      keyboard: true,
+      pagination: true,
+
+      onLeave: null,
+      afterLoad: null,
+
+    };
 
     // Element
     this.el = document.querySelector(element);
 
     // Settings
-    this.settings = Object.assign({}, defaults, options);
+    this.settings = utils.extend(defaults, options);
 
     // body
     this.body = document.querySelector('body');
@@ -79,7 +125,7 @@
 
   };
 
-  TuinSlide.prototype.init = function() {
+  TuinSlider.prototype.init = function() {
 
     this.index = 0;
     this.slideWidth = parseInt(getComputedStyle(this.container).width);
@@ -89,12 +135,12 @@
     this.makeActive(this.index);
 
     if (typeof this.settings.afterLoad === 'function') {
-      this.settings.afterLoad(this.index, this.items);
+      this.settings.afterLoad(this.index);
     }
 
   };
 
-  TuinSlide.prototype.build = function() {
+  TuinSlider.prototype.build = function() {
     if (this.settings.arrows) {
       this.appendArrows();
 
@@ -106,7 +152,7 @@
 
   };
 
-  TuinSlide.prototype.bindEvents = function() {
+  TuinSlider.prototype.bindEvents = function() {
     var self = this;
 
     if (this.settings.keyboard) {
@@ -143,28 +189,28 @@
 
   };
 
-  TuinSlide.prototype.makeActive = function(index) {
+  TuinSlider.prototype.makeActive = function(index) {
     var self = this;
     var paginationLinks = document.querySelectorAll('.slider-navigation li a');
 
     for (var i = 0; i < this.items.length; i++) {
-      this.items[i].classList.remove('is-active');
-      paginationLinks[i].classList.remove('is-active');
+      utils.removeClass(this.items[i], 'is-active');
+      utils.removeClass(paginationLinks[i], 'is-active');
 
     }
 
-    this.items[index].classList.add('is-active');
-    paginationLinks[index].classList.add('is-active');
+    utils.addClass(this.items[index], 'is-active');
+    utils.addClass(paginationLinks[index], 'is-active');
 
   };
 
-  TuinSlide.prototype.move = function(index) {
+  TuinSlider.prototype.move = function(index) {
     var tl = new TimelineLite();
     var self = this;
 
     var paginationLinks = document.querySelector('.slider-navigation');
 
-    if (!this.items[index].classList.contains('is-active')) {
+    if (!utils.hasClass(this.items[index], 'is-active')) {
       tl.eventCallback('onStart', function() {
         utils.setStyle(self.settings.prevHtml, 'pointerEvents', 'none');
         utils.setStyle(self.settings.nextHtml, 'pointerEvents', 'none');
@@ -173,7 +219,7 @@
       });
 
       if (typeof self.settings.onLeave === 'function') {
-        tl.add(self.settings.onLeave(self.index, self.items));
+        tl.add(self.settings.onLeave(self.index));
       }
 
       tl.to(this.container, this.settings.duration, {
@@ -183,13 +229,15 @@
       }, '-=0.5');
 
       if (typeof self.settings.afterLoad === 'function') {
-        tl.add(self.settings.afterLoad(index, self.items));
+        tl.add(self.settings.afterLoad(index));
       }
 
       tl.eventCallback('onComplete', function() {
-        utils.setStyle(self.settings.prevHtml, 'pointerEvents', 'initial');
-        utils.setStyle(self.settings.nextHtml, 'pointerEvents', 'initial');
-        utils.setStyle(paginationLinks, 'pointerEvents', 'initial');
+        utils.setStyle(self.settings.prevHtml, 'pointerEvents', 'auto');
+        utils.setStyle(self.settings.nextHtml, 'pointerEvents', 'auto');
+        utils.setStyle(paginationLinks, 'pointerEvents', 'auto');
+
+        console.log(paginationLinks);
 
       });
 
@@ -203,7 +251,7 @@
 
   };
 
-  TuinSlide.prototype.moveToNext = function(index) {
+  TuinSlider.prototype.moveToNext = function(index) {
     if ((this.index + 1) < this.items.length) {
       this.move(this.index + 1);
 
@@ -211,7 +259,7 @@
 
   };
 
-  TuinSlide.prototype.moveToPrev = function() {
+  TuinSlider.prototype.moveToPrev = function() {
     if (this.index > 0) {
       this.move(this.index - 1);
 
@@ -219,7 +267,7 @@
 
   };
 
-  TuinSlide.prototype.keyboard = function(event) {
+  TuinSlider.prototype.keyboard = function(event) {
 
     if (event.keyCode === 37) {
       this.moveToPrev();
@@ -233,7 +281,7 @@
 
   };
 
-  TuinSlide.prototype.appendArrows = function() {
+  TuinSlider.prototype.appendArrows = function() {
     var arrows = document.createElement('div');
     arrows.setAttribute('class', 'slider-controls');
 
@@ -256,7 +304,7 @@
 
   };
 
-  TuinSlide.prototype.appendPagination = function() {
+  TuinSlider.prototype.appendPagination = function() {
     var paginationList = '';
 
     for (var i = 0; i < this.items.length; i++) {
@@ -272,7 +320,7 @@
 
   };
 
-  TuinSlide.prototype.resize = debounce(function() {
+  TuinSlider.prototype.resize = debounce(function() {
     var self = this;
 
     self.slideWidth = parseInt(getComputedStyle(this.container).width);
@@ -283,6 +331,6 @@
 
   }, 10);
 
-  window.TuinSlide = TuinSlide;
+  window.TuinSlider = TuinSlider;
 
 })(window);
