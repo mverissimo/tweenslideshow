@@ -238,8 +238,6 @@
         utils.setStyle(self.settings.nextHtml, 'pointerEvents', 'auto');
         utils.setStyle(paginationLinks, 'pointerEvents', 'auto');
 
-        console.log(paginationLinks);
-
       });
 
     }
