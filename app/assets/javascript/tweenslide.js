@@ -1,23 +1,6 @@
 (function() {
   'use strict';
 
-  // From https://davidwalsh.name/javascript-debounce-function.
-  function debounce(func, wait, immediate) {
-    var timeout;
-    return function() {
-      var context = this,
-        args = arguments;
-      var later = function() {
-        timeout = null;
-        if (!immediate) func.apply(context, args);
-      };
-      var callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-      if (callNow) func.apply(context, args);
-    };
-
-  }
 
   // Utilities helpers
   var utils = {
@@ -31,11 +14,28 @@
         if (defaults.hasOwnProperty(key)) {
           defaults[key] = options[key];
         }
-     
+
       }
 
       return defaults;
 
+    },
+
+    // From https://davidwalsh.name/javascript-debounce-function.
+    debounce: function(func, wait, immediate) {
+      var timeout;
+      return function() {
+        var context = this,
+          args = arguments;
+        var later = function() {
+          timeout = null;
+          if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+      }
     },
 
     setStyle: function(el, property, value) {
@@ -71,9 +71,9 @@
     },
 
     removeClass: function(el, className) {
-      if (el.classList)
+      if (el.classList) {
         el.classList.remove(className)
-      else if (utils.hasClass(el, className)) {
+      } else if (utils.hasClass(el, className)) {
         var reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
         el.className = el.className.replace(reg, ' ');
       }
@@ -94,6 +94,7 @@
 
       nextHtml: '',
       prevHtml: '',
+      paginationHtml: '',
 
       arrows: true,
       keyboard: true,
@@ -192,16 +193,23 @@
 
   TuinSlider.prototype.makeActive = function(index) {
     var self = this;
-    var paginationLinks = document.querySelectorAll('.slider-navigation li a');
+
+    if (this.settings.pagination) {
+      var paginationLinks = document.querySelectorAll('.slider-navigation li a');
+    }
 
     for (var i = 0; i < this.items.length; i++) {
       utils.removeClass(this.items[i], 'is-active');
-      utils.removeClass(paginationLinks[i], 'is-active');
+      if (this.settings.pagination) {
+        utils.removeClass(paginationLinks[i], 'is-active');
+      }
 
     }
 
     utils.addClass(this.items[index], 'is-active');
-    utils.addClass(paginationLinks[index], 'is-active');
+    if (this.settings.pagination) {
+      utils.addClass(paginationLinks[index], 'is-active');
+    }
 
   };
 
@@ -209,13 +217,16 @@
     var tl = new TimelineLite();
     var self = this;
 
-    var paginationLinks = document.querySelector('.slider-navigation');
-
     if (!utils.hasClass(this.items[index], 'is-active')) {
       tl.eventCallback('onStart', function() {
-        utils.setStyle(self.settings.prevHtml, 'pointerEvents', 'none');
-        utils.setStyle(self.settings.nextHtml, 'pointerEvents', 'none');
-        utils.setStyle(paginationLinks, 'pointerEvents', 'none');
+        if (self.settings.arrows) {
+          utils.setStyle(self.settings.prevHtml, 'pointerEvents', 'none');
+          utils.setStyle(self.settings.nextHtml, 'pointerEvents', 'none');
+        }
+
+        if (self.settings.pagination) {
+          utils.setStyle(this.settings.paginationHtml, 'pointerEvents', 'none');
+        }
 
       });
 
@@ -234,9 +245,15 @@
       }
 
       tl.eventCallback('onComplete', function() {
-        utils.setStyle(self.settings.prevHtml, 'pointerEvents', 'auto');
-        utils.setStyle(self.settings.nextHtml, 'pointerEvents', 'auto');
-        utils.setStyle(paginationLinks, 'pointerEvents', 'auto');
+        if (self.settings.arrows) {
+          utils.setStyle(self.settings.prevHtml, 'pointerEvents', 'auto');
+          utils.setStyle(self.settings.nextHtml, 'pointerEvents', 'auto');
+
+        }
+
+        if (self.settings.pagination) {
+          utils.setStyle(self.settings.paginationHtml, 'pointerEvents', 'auto');
+        }
 
       });
 
@@ -311,15 +328,15 @@
 
     }
 
-    var pagination = document.createElement('ul');
-    pagination.setAttribute('class', 'slider-navigation');
-    pagination.innerHTML = paginationList;
+    this.settings.paginationHtml = document.createElement('ul');
+    this.settings.paginationHtml.setAttribute('class', 'slider-navigation');
+    this.settings.paginationHtml.innerHTML = paginationList;
 
-    this.body.appendChild(pagination);
+    this.body.appendChild(this.settings.paginationHtml);
 
   };
 
-  TuinSlider.prototype.resize = debounce(function() {
+  TuinSlider.prototype.resize = utils.debounce(function() {
     var self = this;
 
     self.slideWidth = parseInt(getComputedStyle(this.container).width);
