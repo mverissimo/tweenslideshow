@@ -54,7 +54,7 @@ default: 'easeOut'
 options: 'ease', 'easeIn'
 ```
 
-For more options check: [For more options](href="http://greensock.com/ease-visualizer)
+[For more options](http://greensock.com/ease-visualizer)
 
 **duration**
 ```
